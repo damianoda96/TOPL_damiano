@@ -3,11 +3,13 @@
 # Expression Language (EL)
 
 class Expr:
+
     # e ::= true
     #   false
     #   not e1
     #   e1 and e2
     #   e1 or e2
+
     pass
 
 class BoolExpr(Expr):
@@ -24,8 +26,10 @@ class NotExpr(Expr):
 
         if self.expr.val is True:
             self.expr.val = False
+            self.val = False
         elif self.expr.val is False:
             self.expr.val = True
+            self.val = False
 
 class BinaryExpr(Expr):
     # Represents form e1 @ e2
