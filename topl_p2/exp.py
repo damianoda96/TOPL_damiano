@@ -107,3 +107,15 @@ def size(e):
         return 1 + value(e.lhs) + value(e.rhs)
 
     assert False
+
+def height(e):
+    pass
+
+def same(e):
+    pass
+
+def step(e):
+    pass
+
+def reduce(e):
+    pass
