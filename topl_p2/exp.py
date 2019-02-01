@@ -59,15 +59,8 @@ class OrExpr(Expr):
         self.lhs = e1
         self.rhs = e2
 
-    # work on this!!!!!
-
     def equate(self):
-        # print(self.lhs.val)
-        # print(self.rhs.val)
-        if self.lhs.val or self.rhs.val:
-            return BoolExpr(True)
-        else:
-            return BoolExpr(False)
+        return self.lhs or self.rhs
 
 # -------------- VALUE ----------------------------
 
@@ -104,18 +97,71 @@ def size(e):
         return 1 + size(e.lhs) + size(e.rhs)
 
     if type(e) is OrExpr:
-        return 1 + value(e.lhs) + value(e.rhs)
+        return 1 + size(e.lhs) + size(e.rhs)
 
     assert False
 
-def height(e):
-    pass
+# ------------ HEIGHT ---------------------
 
-def same(e):
-    pass
+def height(e):
+    assert isinstance(e, Expr)
+
+    if type(e) is BoolExpr:
+        return 1
+
+    if type(e) is NotExpr:
+        return 1 + height(e.expr)
+
+    if type(e) is AndExpr:
+        return 1 + height(e.lhs) + height(e.rhs)
+
+    if type(e) is OrExpr:
+        return 1 + height(e.lhs) + height(e.rhs)
+
+# ------------- SAME --------------------
+
+def same(e, e1):
+    assert isinstance(e, Expr)
+    assert isinstance(e1, Expr)
+
+    if e == e1:
+        return true
+    else:
+        return false
+
+# ------------- STEP --------------------
 
 def step(e):
-    pass
+    assert isinstance(e, Expr)
+    # returns an expression after 1 step through e
+
+    if type(e) is BoolExpr:
+        return e
+
+    if type(e) is NotExpr:
+        return not e
+
+    if type(e) is AndExpr:
+        return e.equate()
+
+    if type(e) is OrExpr:
+        return e.equate()
+
+
+# ----------------- REDUCE -------------------
 
 def reduce(e):
-    pass
+    assert isinstance(e, Expr)
+
+    if type(e) is BoolExpr:
+        return e
+
+    if type(e) is NotExpr:
+        return not reduce(e)
+
+    if type(e) is AndExpr:
+        return reduce(e.equate())
+
+    if type(e) is OrExpr:
+        return reduce(e.equate())
+
