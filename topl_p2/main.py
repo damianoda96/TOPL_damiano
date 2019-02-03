@@ -4,35 +4,31 @@ import gen
 
 # -------- BELOW HERE IS ORIGINAL TEST STUFF -----------
 
-e = BoolExpr(True)
+e = BoolExpr(False)
 e1 = BoolExpr(True)
 
 e2 = BoolExpr(True)
-e3 = BoolExpr(True)
+e3 = BoolExpr(False)
 
 e4 = AndExpr(e, e1)
 e5 = AndExpr(e2, e3)
 
-# e5 = OrExpr(e, e1)
+e6 = OrExpr(e, e1)
+e7 = OrExpr(e2, e3)
 
-e7 = AndExpr(e4, e5)
+e8 = AndExpr(e4, e5)
+e9 = AndExpr(e6, e7)
 
-#print(step(e7))
+e10 = OrExpr(e6, e7)
 
-e8 = reduce(e7)
+print(reduce(e6).val)
+print(reduce(e10).val)
 
-print(e8.val)
+print(height(e10))
 
 
 
-# print(e.val)
-# print(value(e))
-# print(value(e2))
-# print(value(e3))
-# print(value(e4.expr))
-# print(e4.expr.val)
 
-# print(e3.equate().val)
 
 
 
