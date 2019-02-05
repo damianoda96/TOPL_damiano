@@ -10,6 +10,9 @@ class Expr:
     #   e1 and e2
     #   e1 or e2
 
+    #v ::= true
+    #      false
+
     pass
 
 class BoolExpr(Expr):
@@ -160,28 +163,77 @@ def same(e, e1):
      else:
         return False
 
+    '''
+    if type(e1) is BoolExpr:
+        return e1.value = e2.value
+
+    if type(e1) is NotExpr:
+        return same(e1.expr, e2.expr)
+
+    if type(e1) is AndExpr:
+        return same(e1.lhs, e2.lhs) and same(e1.rhs, e2.rhs)
+
+    if type(e1) is OrExpr:
+        return same(e1.lhs, e2.lhs) and same(e1.rhs, e2.rhs)
+    '''
+
 # ------------- STEP --------------------
 
+def step_and(e):
+    if is_value(e.lhs) and is_value(e1.rhs):
+
+    if is_reducible(e.lhs):
+        return AndExpr(step(e.lhs), e.rhs)
+
+    if is_reducible(e.rhs):
+        return AndExpr(e.lhs, step(e.rhs))
+
+    assert False
+
+def step_or(e):
+    if is_value(e.lhs) and is_value(e1.rhs):
+
+    if is_reducible(e.lhs):
+        return OrExpr(step(e.lhs), e.rhs)
+
+    if is_reducible(e.rhs):
+        return OrExpr(e.lhs, step(e.rhs))
+
+    assert False
+
+
 def step(e):
-    assert isinstance(e, Expr)
-    # returns an expression after 1 step through e
+    if(is_reducible(e)):
+        assert isinstance(e, Expr)
+        # returns an expression after 1 step through e
 
-    if type(e) is BoolExpr:
-        return e
+        if type(e) is BoolExpr:
+            return e
 
-    if type(e) is NotExpr:
-        return not e
+        if type(e) is NotExpr:
+            '''
+            not true -> false
+             not false -> true
+            '''
+            if is_value(e.expr):
+                if e.expr.value == True
+                    return BoolExpr(False)
+                 else:
+                    return BoolExpr(True)
 
-    if type(e) is AndExpr:
-        return e.equate()
+            return not step(e.expr)
 
-    if type(e) is OrExpr:
-        return e.equate()
+        if type(e) is AndExpr:
+            return e.equate()
+
+        if type(e) is OrExpr:
+            return e.equate()
 
 
 # ----------------- REDUCE -------------------
 
 def reduce(e):
+    '''#assert(is_reducible(e))
     assert isinstance(e, Expr)
 
     if type(e) is BoolExpr:
@@ -191,8 +243,20 @@ def reduce(e):
         return reduce(not e)
 
     if type(e) is AndExpr:
-        return reduce(e.equate())
+       return reduce(e.equate())
 
     if type(e) is OrExpr:
-        return reduce(e.equate())
+        return reduce(e.equate())'''
+
+    while(is_reducible(e)):
+        step(e)
+    return e
+
+def is_value(e):
+    # returns true if e is irriducible
+    return type(e) is BoolExpr
+
+def is_reducible(e):
+    return not is_value(e)
+
 
