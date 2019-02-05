@@ -147,17 +147,17 @@ def same(e, e1):
     assert isinstance(e1, Expr)
 
     if type(e) == type(e1):
+        if(height(e) == height(e1)):
+            e = reduce(e)
+            e1 = reduce(e1)
 
-        e = reduce(e)
-        e1 = reduce(e1)
-
-        if e.val == e1.val:
-            return True
+            if e.val == e1.val:
+                return True
+            else:
+                return False
         else:
             return False
-
-    else:
-
+     else:
         return False
 
 # ------------- STEP --------------------
