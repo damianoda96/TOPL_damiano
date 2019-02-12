@@ -109,6 +109,30 @@ class AppExpr(Expr):
   	def __str__(self):
   		return f"({self.lhs} {self.rhs})"
 
+ def step_app(e):
+ 	'''
+ 		e1 ~> e1'
+ 	---------------
+	e1 e2 ~> e1' e2
+
+ 	'''
+ 	# \x.e1 e2 ~>
+
+def is_value_1(e):
+  	return type(e) in (IdExpr, AbsExpr)
+
+def is_reducible_1(e)
+  	return not is_value(e)
+
+def step_1(e):
+  	assert isinstance(e, Expr)
+  	assert is_reducible_1(e)
+
+  	if type(e) is AppExpr:
+  		step_app(e)
+
+  	assert False
+
 
 # -------------- VALUE ----------------------------
 

@@ -36,10 +36,14 @@ print(reduce(e4).val)'''
 
 id = AbsExpr(VarDecl("x"), IdExpr("x"))
 
-e1 = AppExpr(id, IdExpr("y"))
+t = AbsExpr("a", AbsExpr("b", IdExpr("a"))
+t = AbsExpr("a", AbsExpr("b", IdExpr("b")))
 
+land = AbsExpr("q", AbsExpr("q", AppExpr(AppExpr(IdExpr("p"), IdExpr("q")), IdExpr("p"))))
+
+print(land)
 print(id)
-print(e1)
+
 
 
 
