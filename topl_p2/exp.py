@@ -15,6 +15,7 @@ class Expr:
 
     pass
 
+
 class BoolExpr(Expr):
     # Represents the strings True and False
     def __init__(self, val):
@@ -57,8 +58,8 @@ class AndExpr(Expr):
         self.lhs = e1
         self.rhs = e2
 
-    def equate(self):
-        return self.lhs and self.rhs
+    #def equate(self):
+        #return self.lhs and self.rhs
 
 
 class OrExpr(Expr):
@@ -71,6 +72,43 @@ class OrExpr(Expr):
 
     def equate(self):
         return self.lhs and self.rhs
+
+
+# ---------------------- NEW STUFF ------------------++++
+
+class IdExpr(Expr):
+  	'''Represents identifiers'''
+  	def __init__(self, id):
+  		self.id = id
+
+  	def __str__(self):
+  		return self.id
+
+class VarDecl(Expr):
+  	'''Represents the declaration of a variable'''
+  	def __init__(self, id):
+  		self.id = id
+
+
+class AbsExpr(Expr):
+  	'''Represents lambda abstractions'''
+
+  	def __init__(self, id, e1):
+  		self.id = id
+  		self.expr = e1
+
+  	def __str__(self):
+  		return f"\\{self.id}.{self.expr}"
+
+class AppExpr(Expr):
+
+  	def __init__(self, lhs, rhs):
+  		self.lhs = lhs
+  		self.rhs = rhs
+
+  	def __str__(self):
+  		return f"({self.lhs} {self.rhs})"
+
 
 # -------------- VALUE ----------------------------
 
@@ -146,6 +184,7 @@ def height(e):
 # ------------- SAME --------------------
 
 def same(e, e1):
+
     assert isinstance(e, Expr)
     assert isinstance(e1, Expr)
 
@@ -160,44 +199,70 @@ def same(e, e1):
                 return False
         else:
             return False
-     else:
-        return False
-
-    '''
-    if type(e1) is BoolExpr:
-        return e1.value = e2.value
-
-    if type(e1) is NotExpr:
-        return same(e1.expr, e2.expr)
-
-    if type(e1) is AndExpr:
-        return same(e1.lhs, e2.lhs) and same(e1.rhs, e2.rhs)
-
-    if type(e1) is OrExpr:
-        return same(e1.lhs, e2.lhs) and same(e1.rhs, e2.rhs)
-    '''
+    else:
+    	return False
 
 # ------------- STEP --------------------
 
+def step_not(e):
+
+	if is_value(e):
+		if e.val:
+			return BoolExpr(False)
+		else:
+			return BoolExpr(True)
+
+	if type(e) is NotExpr:
+		return not e.expr
+
+	if type(e) is AndExpr:
+
+		if isreducible(e.lhs) and isreducible(e.rhs):
+
+			return not (e.lhs and e.rhs)
+
+		elif isreducible(e.lhs) and not is_reducible(e.rhs):
+
+			return not (e.lhs and e.rhs)
+
+	elif type(e) is OrExpr:
+
+		return not e.lhs or e.rhs
+
+	assert False
+
+
 def step_and(e):
-    if is_value(e.lhs) and is_value(e1.rhs):
 
-    if is_reducible(e.lhs):
-        return AndExpr(step(e.lhs), e.rhs)
+	# e and e1
 
-    if is_reducible(e.rhs):
-        return AndExpr(e.lhs, step(e.rhs))
+	if is_value(e.lhs) and is_value(e.rhs):
+		if e.lhs.val and e.rhs.val:
+			return BoolExpr(True)
+		else:
+			return BoolExpr(False)
 
-    assert False
+	if is_reducible(e.lhs):
+		return AndExpr(step(e.lhs), e.rhs)
+
+	if is_reducible(e.rhs):
+		return AndExpr(e.lhs, step(e.rhs))
+
+	assert False
 
 def step_or(e):
-    if is_value(e.lhs) and is_value(e1.rhs):
+
+    if is_value(e.lhs) and is_value(e.rhs):
+    	if e.lhs.val or e.rhs.val:
+    		return BoolExpr(True)
+    	else:
+    		return BoolExpr(False)
 
     if is_reducible(e.lhs):
-        return OrExpr(step(e.lhs), e.rhs)
+    	return OrExpr(step(e.lhs), e.rhs)
 
     if is_reducible(e.rhs):
-        return OrExpr(e.lhs, step(e.rhs))
+    	return OrExpr(e.lhs, step(e.rhs))
 
     assert False
 
@@ -215,19 +280,21 @@ def step(e):
             not true -> false
              not false -> true
             '''
-            if is_value(e.expr):
-                if e.expr.value == True
+            '''if is_value(e.expr):
+                if e.expr.val == True:
                     return BoolExpr(False)
-                 else:
+                else:
                     return BoolExpr(True)
 
-            return not step(e.expr)
+            return not step(e.expr)'''
+
+            return step_not(e.expr)
 
         if type(e) is AndExpr:
-            return e.equate()
+            return step_and(e)
 
         if type(e) is OrExpr:
-            return e.equate()
+            return step_or(e)
 
 
 # ----------------- REDUCE -------------------
@@ -249,7 +316,8 @@ def reduce(e):
         return reduce(e.equate())'''
 
     while(is_reducible(e)):
-        step(e)
+        e = step(e)
+
     return e
 
 def is_value(e):
