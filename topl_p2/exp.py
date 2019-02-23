@@ -13,7 +13,13 @@ class Expr:
     #v ::= true
     #      false
 
+    # e::= x
+    #      x.e1
+    #      e1 e2
+
     pass
+
+# Bool Stuff ------------------------------------
 
 
 class BoolExpr(Expr):
@@ -22,8 +28,12 @@ class BoolExpr(Expr):
         assert (val is True or val is False)
         self.val = val
 
+    def __str__(self):
+    return "true" if self.value else "false"
+
     def equate(self):
         return self.val
+
 
 class NotExpr(Expr):
     # Represents strings in the form 'not e'
@@ -31,24 +41,13 @@ class NotExpr(Expr):
         assert isinstance(e, Expr)
         self.expr = e
 
-        '''if self.expr.val is True:
-            self.expr.val = False
-            self.val = False
-        elif self.expr.val is False:
-            self.expr.val = True
-            self.val = False'''
+    def __str__(self):
+    return f"(not {self.expr})"
 
     def equate(self):
         return not e
         #return not self.expr.val
 
-'''class BinaryExpr(Expr):
-    # Represents form e1 @ e2
-    def __init__(self, e1, e2):
-        assert isinstance(e1, Expr)
-        assert isinstance(e2, Expr)
-        self.lhs = e1
-        self.rhs = e2  # e1'''
 
 class AndExpr(Expr):
     # Represents string in the form 'e1 and e2'
@@ -58,8 +57,8 @@ class AndExpr(Expr):
         self.lhs = e1
         self.rhs = e2
 
-    #def equate(self):
-        #return self.lhs and self.rhs
+    def __str__(self):
+    return f"({self.lhs} and {self.rhs})"
 
 
 class OrExpr(Expr):
@@ -70,68 +69,8 @@ class OrExpr(Expr):
         self.lhs = e1
         self.rhs = e2
 
-    def equate(self):
-        return self.lhs and self.rhs
-
-
-# ---------------------- NEW STUFF ------------------++++
-
-class IdExpr(Expr):
-  	'''Represents identifiers'''
-  	def __init__(self, id):
-  		self.id = id
-
-  	def __str__(self):
-  		return self.id
-
-class VarDecl(Expr):
-  	'''Represents the declaration of a variable'''
-  	def __init__(self, id):
-  		self.id = id
-
-
-class AbsExpr(Expr):
-  	'''Represents lambda abstractions'''
-
-  	def __init__(self, id, e1):
-  		self.id = id
-  		self.expr = e1
-
-  	def __str__(self):
-  		return f"\\{self.id}.{self.expr}"
-
-class AppExpr(Expr):
-
-  	def __init__(self, lhs, rhs):
-  		self.lhs = lhs
-  		self.rhs = rhs
-
-  	def __str__(self):
-  		return f"({self.lhs} {self.rhs})"
-
- def step_app(e):
- 	'''
- 		e1 ~> e1'
- 	---------------
-	e1 e2 ~> e1' e2
-
- 	'''
- 	# \x.e1 e2 ~>
-
-def is_value_1(e):
-  	return type(e) in (IdExpr, AbsExpr)
-
-def is_reducible_1(e)
-  	return not is_value(e)
-
-def step_1(e):
-  	assert isinstance(e, Expr)
-  	assert is_reducible_1(e)
-
-  	if type(e) is AppExpr:
-  		step_app(e)
-
-  	assert False
+    def __str__(self):
+    return f"({self.lhs} or {self.rhs})"
 
 
 # -------------- VALUE ----------------------------
@@ -224,69 +163,71 @@ def same(e, e1):
         else:
             return False
     else:
-    	return False
+        return False
 
 # ------------- STEP --------------------
 
 def step_not(e):
 
-	if is_value(e):
-		if e.val:
-			return BoolExpr(False)
-		else:
-			return BoolExpr(True)
+    if is_value(e):
+        if e.val:
+            return BoolExpr(False)
+        else:
+            return BoolExpr(True)
 
-	if type(e) is NotExpr:
-		return not e.expr
+    else:
+        return NotExpr(step(e.expr))
 
-	if type(e) is AndExpr:
+    '''if type(e) is NotExpr:
+        return not e.expr
 
-		if isreducible(e.lhs) and isreducible(e.rhs):
+    if type(e) is AndExpr:
 
-			return not (e.lhs and e.rhs)
+        if isreducible(e.lhs):
+            return step(e.lhs) and e.rhs
 
-		elif isreducible(e.lhs) and not is_reducible(e.rhs):
+        if isreducible(e.rhs) and not is_reducible(e.rhs):
 
-			return not (e.lhs and e.rhs)
+            return not (e.lhs and e.rhs)
 
-	elif type(e) is OrExpr:
+    elif type(e) is OrExpr:
 
-		return not e.lhs or e.rhs
+        return not e.lhs or e.rhs
 
-	assert False
+    assert False'''
 
 
 def step_and(e):
 
-	# e and e1
+    # e and e1
 
-	if is_value(e.lhs) and is_value(e.rhs):
-		if e.lhs.val and e.rhs.val:
-			return BoolExpr(True)
-		else:
-			return BoolExpr(False)
+    if is_value(e.lhs) and is_value(e.rhs):
+        if e.lhs.val and e.rhs.val:
+            return BoolExpr(True)
+        else:
+            return BoolExpr(False)
 
-	if is_reducible(e.lhs):
-		return AndExpr(step(e.lhs), e.rhs)
+    if is_reducible(e.lhs):
+        return AndExpr(step(e.lhs), e.rhs)
 
-	if is_reducible(e.rhs):
-		return AndExpr(e.lhs, step(e.rhs))
+    if is_reducible(e.rhs):
+        return AndExpr(e.lhs, step(e.rhs))
 
-	assert False
+    assert False
 
 def step_or(e):
 
     if is_value(e.lhs) and is_value(e.rhs):
-    	if e.lhs.val or e.rhs.val:
-    		return BoolExpr(True)
-    	else:
-    		return BoolExpr(False)
+        if e.lhs.val or e.rhs.val:
+            return BoolExpr(True)
+        else:
+            return BoolExpr(False)
 
     if is_reducible(e.lhs):
-    	return OrExpr(step(e.lhs), e.rhs)
+        return OrExpr(step(e.lhs), e.rhs)
 
     if is_reducible(e.rhs):
-    	return OrExpr(e.lhs, step(e.rhs))
+        return OrExpr(e.lhs, step(e.rhs))
 
     assert False
 
@@ -350,5 +291,127 @@ def is_value(e):
 
 def is_reducible(e):
     return not is_value(e)
+
+
+# ---------------------- LAMBA STUFF ------------------++++
+
+class IdExpr(Expr):
+  	'''Represents identifiers'''
+  	def __init__(self, id):
+  		self.id = id
+  		self.ref = None
+
+  	def __str__(self):
+  		return self.id
+
+class VarDecl(Expr):
+  	'''Represents the declaration of a variable'''
+  	def __init__(self, id):
+  		self.id = id
+
+    def __str__(self):
+        return self.id
+
+
+class AbsExpr(Expr):
+  	'''Represents lambda abstractions'''
+
+  	def __init__(self, var, e1):
+        if type(var) is str:
+  		    self.var = VarDecl(var)
+        else:
+            self.var = var
+  		self.expr = e1
+
+  	def __str__(self):
+  		return f"\\{self.var}.{self.expr}"
+
+class AppExpr(Expr):
+
+  	def __init__(self, lhs, rhs):
+  		self.lhs = lhs
+  		self.rhs = rhs
+
+  	def __str__(self):
+  		return f"({self.lhs} {self.rhs})"
+
+def lam_is_value(e):
+    return type(e) in (IdExpr, AbsExpr)
+
+def lam_is_reducible(e):
+    return not is_value(e)
+
+def resolve(e, scope = []):
+    if type(e) is AppExpr:
+        resolve(e.lhs, scope)
+        resolve(e.rhs, scope)
+        return
+
+    if type(e) is AbsExpr:
+        resolve(e.expr, scope + [e.var])
+        return
+
+    if type(e) is IdExpr:
+        for var in reversed(scope):
+            if e.id == var.id:
+                e.ref = var # Bind id to declaration
+                return
+
+        raise Exception("name lookup error")
+
+    assert False
+
+def subst(e, s):
+	# [x->v]x = v
+	# [x->v]y = y (y != x)
+	if type(e) is IdExpr:
+		if e.ref in s: 
+			return s[e.ref]
+        else:
+            return e
+
+	# [x->v] \x.e1 = \x.[e->v]e1
+	if type(e) is AbsExpr:
+		return AbsExpr(e.var, subst(e.expr, s))
+
+	if type(e) is AppExpr:
+		return AppExpr(subst(e.lhs, s), subst(e.rhs), s)
+
+    assert(False)
+
+
+def step_app(e):
+ 	'''
+ 		e1 ~> e1'
+ 	---------------
+	e1 e2 ~> e1' e2
+
+ 	'''
+ 	#	e2 ~> e2'
+ 	# ---------------	
+ 	# \x.e1 e2 ~> \x.e1 e2'
+ 	# \x.e1 v ~> [x->v]e1
+
+ 	if lam_is_reducible(e.lhs): # App1
+ 		return AppExpr(step(e.lhs), e.rhs)
+
+ 	if type(e.lhs) is not AbsExpr:
+ 		raise Exception("application of non-Lambda")
+
+ 	if lam_is_reducible(e.rhs): # App2
+ 		return AppExpr(e.lhs, step(e.rhs))
+
+ 	s = {e.lhs.var: e.rhs}
+
+ 	return subst(e.lhs.expr, s)
+
+def step_lam(e):
+  	assert isinstance(e, Expr)
+  	assert lam_is_reducible(e)
+
+  	if type(e) is AppExpr:
+  		step_app(e)
+
+  	assert False
 
 
