@@ -1,6 +1,9 @@
 # import sys
 
-# Expression Language (EL)
+# Expression Language for Theory of Programming Language
+#
+# Following along with Dr. Sutton's lectures and implementation
+# 
 
 class Expr:
 
@@ -25,11 +28,11 @@ class Expr:
 class BoolExpr(Expr):
     # Represents the strings True and False
     def __init__(self, val):
-        assert (val is True or val is False)
+        assert (val == True or val == False)
         self.val = val
 
     def __str__(self):
-    	return "true" if self.value else "false"
+    	return "True" if self.value else "False"
 
     def equate(self):
         return self.val
@@ -345,12 +348,28 @@ class AppExpr(Expr):
   	def __str__(self):
   		return f"({self.lhs} {self.rhs})"
 
- class CallExpr(Expr):
+ class CallDecl(Expr):
 
- 	'''For function all expressions'''
+ 	'''For Function Declarations'''
 
- 	pass
+ 	def __init__(self, id, params):
+ 		self.id = id
+ 		self.param_types = param_types
 
+ 	def __str__(self):
+  		return self.id
+
+ class CallFunct(Expr):
+
+ 	'''For function call expressions'''
+
+ 	def __init__(self, id, params):
+ 		self.id = id
+ 		self.params = params
+
+
+ 	def __str__(self):
+  		return self.id
 
 def lam_is_value(e):
 
@@ -429,7 +448,7 @@ def step_app(e):
  	return subst(e.lhs.expr, s)
 
 def step_lam(e):
-	
+
   	assert isinstance(e, Expr)
   	assert lam_is_reducible(e)
 
