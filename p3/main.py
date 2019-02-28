@@ -2,8 +2,6 @@ import sys
 from exp import *
 import gen
 
-# -------- BELOW HERE IS ORIGINAL TEST STUFF -----------
-
 '''e = BoolExpr(False)
 e1 = BoolExpr(True)
 
