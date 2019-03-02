@@ -301,7 +301,7 @@ def is_reducible(e):
 
 class IdExpr(Expr):
 
-  	'''Represents identifiers'''
+  	# Identifiers
 
   	def __init__(self, id):
   		self.id = id
@@ -312,7 +312,7 @@ class IdExpr(Expr):
 
 class VarDecl(Expr):
 
-  	'''Represents the declaration of a variable'''
+  	# Declaration of a variable
 
   	def __init__(self, id):
   		self.id = id
@@ -323,7 +323,7 @@ class VarDecl(Expr):
 
 class AbsExpr(Expr):
 
-  	'''Represents lambda abstractions'''
+  	# Lambda Expressiones
 
   	def __init__(self, var, e1):
 
@@ -336,9 +336,26 @@ class AbsExpr(Expr):
   	def __str__(self):
   		return f"\\{self.var}.{self.expr}"
 
+class MultiAbsExpr(Expr): 
+
+	# for multi argument abstractions
+
+	def __init__(self, var, e1, e2):
+
+  		if type(var) is str:
+  		    self.var = VarDecl(var)
+  		else:
+  			self.var = var
+  		self.expr1 = e1
+  		self.expr2 = e2
+
+  	def __str__(self):
+  		return f"\\{self.var}.{self.expr1}{self.expr2}"
+
+
 class AppExpr(Expr):
 
-	'''For Application'''
+	# Application
 
   	def __init__(self, lhs, rhs):
 
@@ -350,7 +367,7 @@ class AppExpr(Expr):
 
  class CallDecl(Expr):
 
- 	'''For Function Declarations'''
+ 	# For Function Declarations 
 
  	def __init__(self, id, params):
  		self.id = id
@@ -361,7 +378,7 @@ class AppExpr(Expr):
 
  class CallFunct(Expr):
 
- 	'''For function call expressions'''
+ 	# For function call expressions
 
  	def __init__(self, id, params):
  		self.id = id
