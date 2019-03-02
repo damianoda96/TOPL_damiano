@@ -290,7 +290,6 @@ def reduce(e):
     return e
 
 def is_value(e):
-    # returns true if e is irriducible
     return type(e) is BoolExpr
 
 def is_reducible(e):
@@ -410,7 +409,7 @@ def resolve(e, scope = []): # for name resolution
     if type(e) is IdExpr:
         for var in reversed(scope):
             if e.id == var.id:
-                e.ref = var # Bind id to declaration
+                e.ref = var
                 return
 
         raise Exception("name lookup error")
@@ -419,16 +418,11 @@ def resolve(e, scope = []): # for name resolution
 
 def lam_subst(e, s):
 
-	# [x->v]x = v
-	# [x->v]y = y (y != x)
-
 	if type(e) is IdExpr:
 		if e.ref in s: 
 			return s[e.ref]
 		else:
 			return e
-
-	# [x->v] \x.e1 = \x.[e->v]e1
 
 	if type(e) is AbsExpr:
 		return AbsExpr(e.var, lam_subst(e.expr, s))
@@ -440,24 +434,14 @@ def lam_subst(e, s):
 
 
 def step_app(e):
- 	'''
- 		e1 ~> e1'
- 	---------------
-	e1 e2 ~> e1' e2
 
- 	'''
- 	#	e2 ~> e2'
- 	# ---------------	
- 	# \x.e1 e2 ~> \x.e1 e2'
- 	# \x.e1 v ~> [x->v]e1
-
- 	if lam_is_reducible(e.lhs): # App1
+ 	if lam_is_reducible(e.lhs):
  		return AppExpr(step(e.lhs), e.rhs)
 
  	if type(e.lhs) is not AbsExpr:
- 		raise Exception("application of non-Lambda")
+ 		raise Exception("Application of non-Lambda")
 
- 	if lam_is_reducible(e.rhs): # App2
+ 	if lam_is_reducible(e.rhs):
  		return AppExpr(e.lhs, step(e.rhs))
 
  	s = {e.lhs.var: e.rhs}
