@@ -5,6 +5,22 @@
 # Following along with Dr. Sutton's lectures and implementation
 # 
 
+class Type:
+
+    # T ::= Bool | Int
+
+class BoolType(Type):
+
+    # type Bool
+
+    pass
+
+class IntType(Type):
+
+    # Type Int
+
+    pass
+
 class Expr:
 
     # --- Boolean stuff --
@@ -15,7 +31,7 @@ class Expr:
     #   e1 and e2
     #   e1 or e2
 
-    #v ::= true
+    # v ::= true
     #      false
 
     # --- lambda stuff ---
@@ -24,7 +40,54 @@ class Expr:
     #      x.e1
     #      e1 e2
 
+    # Implement math expressions
+
+    # e ::  e1 + e2
+    #       e1 - e2
+    #       e1 * e2
+    #       e1 / e2
+    def __init__(Expr):
+        # type of the expression 
+        self.type = None
+
     pass
+
+
+
+# ---- TYPE CHECKING ------
+
+def check_and(e):
+    pass
+
+def do_check(e):
+
+    # implement all of this stuff
+
+    assert isinstance(e, Expr)
+
+    if type(e) is BoolExpr:
+        return BoolType()
+
+    if type(e) is IntExpr:
+        return IntType()
+
+    if type(e) is NotExpr:
+        return check_not(e)
+
+    if type(e) is AndExpr:
+        return check_and(e)
+
+    if type(e) is OrExpr:
+        return check_or(e)
+
+def type_check(e):
+
+    if not e.type:
+        e.type = do_check(e)
+
+    return e.type
+
+
 
 # Bool Stuff ------------------------------------
 
@@ -285,8 +348,21 @@ def is_reducible(e):
     else:
         return True
 
+# ---------- MATH EXPR ----------------
 
-# ---------------------- LAMBA STUFF ------------------++++
+class AddExpr(Expr):
+    pass
+
+class SubExpr(Expr):
+    pass
+
+class MultExpr(Expr):
+    pass
+
+class DivExpr(E)
+
+
+# ---------------------- LAMBA EXPR ------------------++++
 
 class IdExpr(Expr):
 
