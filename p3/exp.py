@@ -314,32 +314,36 @@ class AbsExpr(Expr):
 
   	# Lambda Expressiones
 
-  	def __init__(self, var, e1):
+  	def __init__(self, var, e):
 
   		if type(var) is str:
   		    self.var = VarDecl(var)
   		else:
   			self.var = var
-  		self.expr = e1
+
+  		self.expr = e
 
   	def __str__(self):
-  		return f"\\{self.var}.{self.expr}"
+  		return (str(self.var) + '.' + str(self.expr))
 
 class MultiAbsExpr(Expr): 
 
 	# for multi argument abstractions
 
-	def __init__(self, var, e1, e2):
+	def __init__(self, var, args):
 
   		if type(var) is str:
   		    self.var = VarDecl(var)
   		else:
   			self.var = var
-  		self.expr1 = e1
-  		self.expr2 = e2
+
+        # list of aguments
+
+  		self.args = args
 
   	def __str__(self):
-  		return f"\\{self.var}.{self.expr1}{self.expr2}"
+
+  		return (str(self.val) + args)
 
 
 class AppExpr(Expr):
@@ -352,15 +356,17 @@ class AppExpr(Expr):
   		self.rhs = rhs
 
   	def __str__(self):
-  		return f"({self.lhs} {self.rhs})"
+
+  		return (str(self.lhs) + ' , ' + str(self.rhs))
 
  class CallDecl(Expr):
 
  	# For Function Declarations 
 
  	def __init__(self, id, params):
+
  		self.id = id
- 		self.param_types = param_types
+ 		self.params = params
 
  	def __str__(self):
   		return self.id
@@ -379,30 +385,42 @@ class AppExpr(Expr):
 
 def lam_is_value(e):
 
-    return type(e) in (IdExpr, AbsExpr)
+    if(type(e) == IdExpr or type(e) == AbsExpr):
+        return True
+    else:
+        return False
 
 def lam_is_reducible(e):
 
-    return not is_value(e)
+    return not lam_is_value(e)
 
-def resolve(e, scope = []): # for name resolution
+def resolve(e, scope = []): 
+
+    # for name resolution
 
     if type(e) is AppExpr:
+
         resolve(e.lhs, scope)
         resolve(e.rhs, scope)
+
         return
 
     if type(e) is AbsExpr:
+
         resolve(e.expr, scope + [e.var])
+
         return
 
     if type(e) is IdExpr:
+
         for var in reversed(scope):
+
             if e.id == var.id:
                 e.ref = var
+
                 return
 
-        raise Exception("name lookup error")
+    raise Exception("name lookup error")
 
     assert False
 
@@ -428,15 +446,15 @@ def step_app(e):
  	if lam_is_reducible(e.lhs):
  		return AppExpr(step(e.lhs), e.rhs)
 
- 	if type(e.lhs) is not AbsExpr:
- 		raise Exception("Application of non-Lambda")
+    if lam_is_reducible(e.rhs):
+        return AppExpr(e.lhs, step(e.rhs))
 
- 	if lam_is_reducible(e.rhs):
- 		return AppExpr(e.lhs, step(e.rhs))
+ 	if type(e.lhs) is not AbsExpr:
+ 		raise Exception("Non Lambda Application")
 
  	s = {e.lhs.var: e.rhs}
 
- 	return subst(e.lhs.expr, s)
+ 	return lam_subst(e.lhs.expr, s)
 
 def step_lam(e):
 
