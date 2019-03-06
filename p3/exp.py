@@ -48,10 +48,15 @@ class Expr:
     #       e1 - e2
     #       e1 * e2
     #       e1 / e2
-    def __init__(Expr):
+
+    def __init__(self, Expr):
         # type of the expression 
         self.type = None
-        self.do_check(Expr)
+        self.Expr = Expr
+        self.type = do_check(Expr)
+
+    def __str__(self):
+        return self.Expr
 
     pass
 
@@ -360,29 +365,73 @@ def is_reducible(e):
 # ---------- COMPARISON EXPR'S ----------
 
 class GrThanExpr(Expr): # e1 > e2
-    pass
+
+    def __init__(self, e1, e2):
+        self.lhs = e1
+        self.rhs = e2
+
+    def __str__(self):
+        return (str(self.lhs) + " > " + str(self.rhs))
 
 class LethanExpr(Expr): # e1 < e2
-    pass
+    
+    def __init__(self, e1, e2):
+        self.lhs = e1
+        self.rhs = e2
 
-class GrThanOrEqExpr(): # e1 >= e2
-    pass
+    def __str__(self):
+        return (str(self.lhs) + " < " + str(self.rhs))
 
-class LeThanOrEqExpr(): # e1 <= e2
-    pass
+class GrThanOrEqExpr(Expr): # e1 >= e2
+    
+    def __init__(self, e1, e2):
+        self.lhs = e1
+        self.rhs = e2
 
-class EqualToExpr(): # e1 == e2
-    pass
+    def __str__(self):
+        return (str(self.lhs) + " >= " + str(self.rhs))
 
-class NotEqualToExpr(): # e1 != e2
-    pass
+class LeThanOrEqExpr(Expr): # e1 <= e2
+    
+    def __init__(self, e1, e2):
+        self.lhs = e1
+        self.rhs = e2
 
-class EvalComparison(): # evaluating comparisons
-    pass
+    def __str__(self):
+        return (str(self.lhs) + " <= " + str(self.rhs))
 
+class EqualToExpr(Expr): # e1 == e2
+    
+    def __init__(self, e1, e2):
+        self.lhs = e1
+        self.rhs = e2
+
+    def __str__(self):
+        return (str(self.lhs) + " == " + str(self.rhs))
+
+class NotEqualToExpr(Expr): # e1 != e2
+    
+    def __init__(self, e1, e2):
+        self.lhs = e1
+        self.rhs = e2
+
+    def __str__(self):
+        return (str(self.lhs) + " != " + str(self.rhs))
+
+class EvalComparison(Expr): # evaluating comparisons
+    pass
 
 
 # ---------- MATH EXPR'S ----------------
+
+class IntExpr(Expr):
+
+    def __init__(self, val):
+        assert(type(val) == int)
+        self.val = val
+    
+    def __str__(self):
+        return str(self.val)
 
 class AddExpr(Expr): # e1 + e2
 
@@ -501,7 +550,7 @@ class AppExpr(Expr):
 
   	def __str__(self):
 
-  		return (str(self.lhs) + ' , ' + str(self.rhs))
+  		return ('( ' + str(self.lhs) + ' , ' + str(self.rhs) + ' )')
 
 class CallDecl(Expr):
 
