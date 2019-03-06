@@ -2,45 +2,19 @@ import sys
 from exp import *
 import gen
 
-'''e = BoolExpr(False)
-e1 = BoolExpr(True)
+# Langauge Testing
 
-e3 = NotExpr(e1)
+#e = AndExpr(BoolExpr(True), BoolExpr(True))
 
-andexp = AndExpr(e, e1)
+# id = AbsExpr(VarDecl("x"), IdExpr("x"))
 
-e4 = NotExpr(andexp)
-
-e2 = BoolExpr(True)
-e3 = BoolExpr(False)
-
-e4 = AndExpr(e, e1)
-e5 = AndExpr(e2, e3)
-
-e6 = OrExpr(e, e1)
-e7 = OrExpr(e2, e3)
-
-e8 = AndExpr(e4, e5)
-e9 = AndExpr(e6, e7)
-
-e10 = OrExpr(e6, e7)
-
-# print(reduce(e6).val)
-# print(reduce(e10).val)
-
-# print(height(e10))
-
-print(reduce(e4).val)'''
-
-id = AbsExpr(VarDecl("x"), IdExpr("x"))
-
-# t = AbsExpr("a", AbsExpr("b", IdExpr("a"))
-t = AbsExpr("a", AbsExpr("b", IdExpr("b")))
+# t = AbsExpr("a", AbsExpr("b", IdExpr("a")))
+# t = AbsExpr("a", AbsExpr("b", IdExpr("b")))
 
 land = AbsExpr("q", AbsExpr("q", AppExpr(AppExpr(IdExpr("p"), IdExpr("q")), IdExpr("p"))))
 
 print(land)
-print(id)
+# print(id)
 
 
 

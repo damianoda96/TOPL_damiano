@@ -9,6 +9,8 @@ class Type:
 
     # T ::= Bool | Int
 
+    pass
+
 class BoolType(Type):
 
     # type Bool
@@ -103,7 +105,7 @@ class BoolExpr(Expr):
 
     def __str__(self):
 
-    	if self.val == True:
+        if self.val == True:
             return "True"
         else:
             return "False"
@@ -121,7 +123,7 @@ class NotExpr(Expr):
         self.expr = e
 
     def __str__(self):
-    	return ("not ( " + str(e.expr) + " )")
+    	return ("not ( " + str(self.expr) + " )")
 
     def equate(self):
 
@@ -348,21 +350,44 @@ def is_reducible(e):
     else:
         return True
 
-# ---------- MATH EXPR ----------------
+# ---------- COMPARISON EXPR'S ----------
 
-class AddExpr(Expr):
+class GrThanExpr(Expr): # e1 > e2
     pass
 
-class SubExpr(Expr):
+class LethanExpr(Expr): # e1 < e2
     pass
 
-class MultExpr(Expr):
+class GrThanOrEqExpr(): # e1 >= e2
     pass
 
-class DivExpr(E)
+class LeThanOrEqExpr(): # e1 <= e2
+    pass
+
+class EqualToExpr(): # e1 == e2
+    pass
+
+class NotEqualToExpr(): # e1 != e2
+    pass
 
 
-# ---------------------- LAMBA EXPR ------------------++++
+
+# ---------- MATH EXPR'S ----------------
+
+class AddExpr(Expr): # e1 + e2
+    pass
+
+class SubExpr(Expr): # e1 - e2
+    pass
+
+class MultExpr(Expr): # e1 * e2
+    pass
+
+class DivExpr(Expr): # e1 / e2
+    pass
+
+
+# ---------------------- LAMBA EXPR'S ------------------++++
 
 class IdExpr(Expr):
 
@@ -400,26 +425,26 @@ class AbsExpr(Expr):
   		self.expr = e
 
   	def __str__(self):
-  		return (str(self.var) + '.' + str(self.expr))
+  		return (str(self.var) + './' + str(self.expr))
 
 class MultiAbsExpr(Expr): 
 
 	# for multi argument abstractions
 
-	def __init__(self, var, args):
+    def __init__(self, var, args):
 
-  		if type(var) is str:
-  		    self.var = VarDecl(var)
-  		else:
-  			self.var = var
+        if type(var) is str:
+            self.var = VarDecl(var)
+        else:
+            self.var = var
 
         # list of aguments
 
-  		self.args = args
+        self.args = args
 
-  	def __str__(self):
+    def __str__(self):
 
-  		return (str(self.val) + args)
+        return (str(self.val) + args)
 
 
 class AppExpr(Expr):
@@ -435,7 +460,7 @@ class AppExpr(Expr):
 
   		return (str(self.lhs) + ' , ' + str(self.rhs))
 
- class CallDecl(Expr):
+class CallDecl(Expr):
 
  	# For Function Declarations 
 
@@ -447,7 +472,7 @@ class AppExpr(Expr):
  	def __str__(self):
   		return self.id
 
- class CallFunct(Expr):
+class CallFunct(Expr):
 
  	# For function call expressions
 
@@ -519,18 +544,18 @@ def lam_subst(e, s):
 
 def step_app(e):
 
- 	if lam_is_reducible(e.lhs):
- 		return AppExpr(step(e.lhs), e.rhs)
+    if lam_is_reducible(e.lhs):
+        return AppExpr(step(e.lhs), e.rhs)
 
     if lam_is_reducible(e.rhs):
         return AppExpr(e.lhs, step(e.rhs))
 
- 	if type(e.lhs) is not AbsExpr:
- 		raise Exception("Non Lambda Application")
+    if type(e.lhs) is not AbsExpr:
+        raise Exception("Non Lambda Application")
 
- 	s = {e.lhs.var: e.rhs}
+    s = {e.lhs.var: e.rhs}
 
- 	return lam_subst(e.lhs.expr, s)
+    return lam_subst(e.lhs.expr, s)
 
 def step_lam(e):
 
