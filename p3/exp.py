@@ -51,6 +51,7 @@ class Expr:
     def __init__(Expr):
         # type of the expression 
         self.type = None
+        self.do_check(Expr)
 
     pass
 
@@ -58,7 +59,13 @@ class Expr:
 
 # ---- TYPE CHECKING ------
 
+def check_not(e):
+    pass
+
 def check_and(e):
+    pass
+
+def check_or(e):
     pass
 
 def do_check(e):
@@ -370,20 +377,56 @@ class EqualToExpr(): # e1 == e2
 class NotEqualToExpr(): # e1 != e2
     pass
 
+class EvalComparison(): # evaluating comparisons
+    pass
+
 
 
 # ---------- MATH EXPR'S ----------------
 
 class AddExpr(Expr): # e1 + e2
-    pass
+
+    def __init__(self, e1, e2):
+        self.lhs = e1
+        self.rhs = e2
+
+    def __str__(self):
+        return (str(self.lhs) + " + " + str(self.rhs))
 
 class SubExpr(Expr): # e1 - e2
-    pass
+    
+    def __init__(self, e1, e2):
+        self.lhs = e1
+        self.rhs = e2
+
+    def __str__(self):
+        return (str(self.lhs) + " - " + str(self.rhs))
 
 class MultExpr(Expr): # e1 * e2
-    pass
+    
+    def __init__(self, e1, e2):
+        self.lhs = e1
+        self.rhs = e2
+
+    def __str__(self):
+        return (str(self.lhs) + " * " + str(self.rhs))
 
 class DivExpr(Expr): # e1 / e2
+    
+    def __init__(self, e1, e2):
+        self.lhs = e1
+        self.rhs = e2
+
+    def __str__(self):
+        return (str(self.lhs) + " / " + str(self.rhs))
+
+class step_math(Expr):
+    pass
+
+class math_is_reducible():
+    pass
+
+class math_is_value():
     pass
 
 
