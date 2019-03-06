@@ -469,17 +469,80 @@ class DivExpr(Expr): # e1 / e2
     def __str__(self):
         return (str(self.lhs) + " / " + str(self.rhs))
 
-def step_math(e):
-    pass
+# ------- MATH EVALUATION -----
+
+def math_step_add(e):
+    
+    if type(e.lhs) == IntExpr and type(e.lhs) == IntExpr:
+        return IntExpr(e.lhs.val + e.rhs.val)
+
+    if math_is_reducible(e.lhs):
+        return AddExpr(math_step(e.lhs), e.rhs)
+
+    if math_is_reducible(e.rhs):
+        return AddExpr(e.lhs, math_step(e.rhs))
+
+def math_step_sub(e):
+
+    if type(e.lhs) == IntExpr and type(e.lhs) == IntExpr:
+        return IntExpr(e.lhs.val - e.rhs.val)
+
+    if math_is_reducible(e.lhs):
+        return SubExpr(math_step(e.lhs), e.rhs)
+
+    if math_is_reducible(e.rhs):
+        return SubExpr(e.lhs, math_step(e.rhs))
+
+def math_step_mult(e):
+
+    if type(e.lhs) == IntExpr and type(e.lhs) == IntExpr:
+        return IntExpr(e.lhs.val * e.rhs.val)
+
+    if math_is_reducible(e.lhs):
+        return MultExpr(math_step(e.lhs), e.rhs)
+
+    if math_is_reducible(e.rhs):
+        return MultExpr(e.lhs, math_step(e.rhs))
+
+def math_step_div(e):
+
+    if type(e.lhs) == IntExpr and type(e.lhs) == IntExpr:
+        return IntExpr(e.lhs.val - e.rhs.val)
+
+    if math_is_reducible(e.lhs):
+        return DivExpr(math_step(e.lhs), e.rhs)
+
+    if math_is_reducible(e.rhs):
+        return DivExpr(e.lhs, math_step(e.rhs))
+
+def math_step(e):
+    
+    if(math_is_reducible(e)):
+
+        if type(e) == IntType:
+            return e
+
+        if type(e) == AddExpr:
+            return math_step_add(e)
+
+        if type(e) == SubExpr:
+            return math_step_sub(e)
+
+        if type(e) == MultExpr:
+            return math_step_mult(e)
+
+        if type(e) == DivExpr:
+            return math_step_div(e)
+    
 
 def math_is_reducible(e):
 
     # if e is not a raw integer value
     
-    if(!math_is_value(e)):
-        return True
-    else:
+    if(math_is_value(e)):
         return False
+    else:
+        return True
 
 def math_is_value(e):
 

@@ -20,8 +20,9 @@ import gen
 
 # print(var)
 
-one = IntExpr(1)
-print(one)
+summ = math_step(AddExpr(IntExpr(1), IntExpr(1)))
+
+print(summ)
 
 
 
