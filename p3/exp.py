@@ -469,14 +469,24 @@ class DivExpr(Expr): # e1 / e2
     def __str__(self):
         return (str(self.lhs) + " / " + str(self.rhs))
 
-class step_math(Expr):
+def step_math(e):
     pass
 
-class math_is_reducible():
-    pass
+def math_is_reducible(e):
 
-class math_is_value():
-    pass
+    # if e is not a raw integer value
+    
+    if(!math_is_value(e)):
+        return True
+    else:
+        return False
+
+def math_is_value(e):
+
+    if(type(e) == IntExpr):
+        return True
+    else:
+        return False
 
 
 # ---------------------- LAMBA EXPR'S ------------------++++
