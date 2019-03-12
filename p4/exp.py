@@ -465,7 +465,7 @@ class NotEqualToExpr(Expr): # e1 != e2
     def __str__(self):
         return (str(self.lhs) + " != " + str(self.rhs))
 
-def EvalEqExpr(e):
+def EvalEqualityExpr(e):
 
 	math_types = [IntExpr, AddExpr, SubExpr, MultExpr, DivExpr]
 	bool_types = [BoolExpr, NotExpr, AndExpr, OrExpr]
@@ -482,11 +482,34 @@ def EvalEqExpr(e):
 		which_eval = "bool"
 
 	if type(e) == EqualToExpr:
-		pass
+		if which_eval == "math":
+			if check_equality(math_solve(e.lhs), math_solve(e.rhs)):
+				return(BoolExpr(True))
+			else:
+				return(BoolExpr(False))
+		else:
+			if check_equality(reduce(e.lhs), reduce(e.rhs)):
+				return(BoolExpr(True))
+			else:
+				return(BoolExpr(False))
+
 	if type(e) == NotEqualToExpr:
-		pass
+		if which_eval == "math":
+			if check_equality(math_solve(e.lhs), math_solve(e.rhs)):
+				return(BoolExpr(False))
+			else:
+				return(BoolExpr(True))
+		else:
+			if check_equality(reduce(e.lhs), reduce(e.rhs)):
+				return(BoolExpr(False))
+			else:
+				return(BoolExpr(True))
 	
 	assert(False)
+
+def check_equality(lhs, rhs):
+	return lhs.val == rhs.val
+
 
 
 # ---------- MATH EXPR'S ----------------
@@ -582,7 +605,7 @@ def math_step_div(e):
     if math_is_reducible(e.rhs):
         return DivExpr(e.lhs, math_step(e.rhs))
 
-def math_step(e):
+def math_solve(e):
     
     if(math_is_reducible(e)):
 
