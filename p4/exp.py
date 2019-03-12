@@ -421,6 +421,32 @@ class LeThanOrEqExpr(Expr): # e1 <= e2
     def __str__(self):
         return (str(self.lhs) + " <= " + str(self.rhs))
 
+def EvalMathComparison(e): # evaluating comparisons
+
+	types =[IntExpr, AddExpr, SubExpr, MultExpr, DivExpr]
+
+	assert(e.lhs and e.rhs) # assert we have a left amd right operands
+	assert(type(e.lhs) in types) # make sure is math type
+	assert(type(e.rhs) in types)
+
+	if type(e) is GrThanExpr:
+		pass
+	elif type(e) is GrThanOrEqExpr:
+		pass
+	elif type(e) is LethanExpr:
+		pass
+	elif type(e) is LeThanOrEqExpr:
+		pass
+	elif type(e) is EqualToExpr:
+		pass
+	elif type(e) is NotEqualToExpr:
+		pass
+	else:
+		assert(False)
+
+
+# ------ For both Bool and Int exprs -------
+
 class EqualToExpr(Expr): # e1 == e2
     
     def __init__(self, e1, e2):
@@ -439,8 +465,28 @@ class NotEqualToExpr(Expr): # e1 != e2
     def __str__(self):
         return (str(self.lhs) + " != " + str(self.rhs))
 
-class EvalComparison(Expr): # evaluating comparisons
-    pass
+def EvalEqExpr(e):
+
+	math_types = [IntExpr, AddExpr, SubExpr, MultExpr, DivExpr]
+	bool_types = [BoolExpr, NotExpr, AndExpr, OrExpr]
+
+	which_eval = ""
+
+	assert(e.lhs and e.rhs)
+
+	if(e.lhs in math_types): # right and left sides must be same type, bool or int
+		assert(e.rhs in math_types)
+		which_eval = "math"
+	if(e.lhs in bool_types):
+		assert(e.rhs in bool_types)
+		which_eval = "bool"
+
+	if type(e) == EqualToExpr:
+		pass
+	if type(e) == NotEqualToExpr:
+		pass
+	
+	assert(False)
 
 
 # ---------- MATH EXPR'S ----------------
@@ -528,7 +574,7 @@ def math_step_mult(e):
 def math_step_div(e):
 
     if type(e.lhs) == IntExpr and type(e.lhs) == IntExpr:
-        return IntExpr(e.lhs.val - e.rhs.val)
+        return IntExpr(e.lhs.val / e.rhs.val)
 
     if math_is_reducible(e.lhs):
         return DivExpr(math_step(e.lhs), e.rhs)
