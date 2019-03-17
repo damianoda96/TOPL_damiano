@@ -20,10 +20,16 @@ import gen
 
 # print(var)
 
-summ = math_step(AddExpr(IntExpr(1), IntExpr(1)))
+#sum0 = math_step(AddExpr(IntExpr(1), IntExpr(1)))
 
-print(summ)
+a = IntExpr(1)
+b = IntExpr(1)
+c = IntExpr(2)
+x = EvalEqualityExpr(EqualToExpr(a,b))
+y = EvalEqualityExpr(EqualToExpr(b,c))
 
+print(x)
+print(y)
 
 
 

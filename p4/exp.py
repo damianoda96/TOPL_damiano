@@ -30,14 +30,14 @@ class ArrowType(Type):
 		self.param = t1
 		self.ret = t2
 
-    def __str__(self):
-    	return str(self.param) + " -> " + str(self.ret)
+	def __str__(self):
+		return str(self.param) + " -> " + str(self.ret)
 
 class FnType(Type):
 
     # Type Int
 
-    def __init__(self, params, ret)
+    def __init__(self, params, ret):
     	self.params = params
     	self.ret = ret
 
@@ -135,6 +135,7 @@ class BoolExpr(Expr):
 
         assert (val == True or val == False)
         self.val = val
+        self.type = "BoolExpr"
 
     def __str__(self):
 
@@ -154,12 +155,12 @@ class NotExpr(Expr):
     def __init__(self, e):
         assert isinstance(e, Expr)
         self.expr = e
+        self.type = "NotExpr"
 
     def __str__(self):
     	return ("not ( " + str(self.expr) + " )")
 
     def equate(self):
-
         return not e
 
 
@@ -174,6 +175,7 @@ class AndExpr(Expr):
 
         self.lhs = e1
         self.rhs = e2
+        self.type = "AndExpr"
 
     def __str__(self):
     	return (str(self.lhs) + " and " + str(self.rhs))
@@ -190,6 +192,7 @@ class OrExpr(Expr):
 
         self.lhs = e1
         self.rhs = e2
+        self.type = "OrExpr"
 
     def __str__(self):
 
@@ -429,20 +432,43 @@ def EvalMathComparison(e): # evaluating comparisons
 	assert(type(e.lhs) in types) # make sure is math type
 	assert(type(e.rhs) in types)
 
+	lhs = math_solve(e.lhs)
+	rhs = math_solve(e.rhs)
+
 	if type(e) is GrThanExpr:
-		pass
+		if is_gr(lhs, rhs):
+			return BoolExpr(True)
+		else:
+			return BoolExpr(False)
 	elif type(e) is GrThanOrEqExpr:
-		pass
+		if is_gr_or_eq(lhs, rhs):
+			return BoolExpr(True)
+		else:
+			return BoolExpr(False)
 	elif type(e) is LethanExpr:
-		pass
+		if is_le(lhs, rhs):
+			return BoolExpr(True)
+		else:
+			return BoolExpr(False)
 	elif type(e) is LeThanOrEqExpr:
-		pass
-	elif type(e) is EqualToExpr:
-		pass
-	elif type(e) is NotEqualToExpr:
-		pass
+		if is_le_or_eq(lhs, rhs):
+			return BoolExpr(True)
+		else:
+			return BoolExpr(False)
 	else:
 		assert(False)
+
+# Helpers
+
+def is_gr(lhs, rhs):
+	return lhs.val > rhs.val
+def is_le(lhs, rhs):
+	return lhs.val < rhs.val
+def is_gr_or_eq(lhs, rhs):
+	return lhs.val >= rhs.val
+def is_le_or_eq(lhs, rhs):
+	return lhs.val <= rhs.val
+
 
 
 # ------ For both Bool and Int exprs -------
@@ -467,18 +493,18 @@ class NotEqualToExpr(Expr): # e1 != e2
 
 def EvalEqualityExpr(e):
 
-	math_types = [IntExpr, AddExpr, SubExpr, MultExpr, DivExpr]
-	bool_types = [BoolExpr, NotExpr, AndExpr, OrExpr]
+	math_types = ["IntExpr", "AddExpr", "SubExpr", "MultExpr", "DivExpr"]
+	bool_types = ["BoolExpr", "NotExpr", "AndExpr", "OrExpr"]
 
 	which_eval = ""
 
 	assert(e.lhs and e.rhs)
 
-	if(e.lhs in math_types): # right and left sides must be same type, bool or int
-		assert(e.rhs in math_types)
+	if(e.lhs.type in math_types): # right and left sides must be same type, bool or int
+		assert(e.rhs.type in math_types)
 		which_eval = "math"
-	if(e.lhs in bool_types):
-		assert(e.rhs in bool_types)
+	if(e.lhs.type in bool_types):
+		assert(e.rhs.type in bool_types)
 		which_eval = "bool"
 
 	if type(e) == EqualToExpr:
@@ -495,6 +521,7 @@ def EvalEqualityExpr(e):
 
 	if type(e) == NotEqualToExpr:
 		if which_eval == "math":
+
 			if check_equality(math_solve(e.lhs), math_solve(e.rhs)):
 				return(BoolExpr(False))
 			else:
@@ -519,6 +546,7 @@ class IntExpr(Expr):
     def __init__(self, val):
         assert(type(val) == int)
         self.val = val
+        self.type = "IntExpr"
     
     def __str__(self):
         return str(self.val)
@@ -528,6 +556,7 @@ class AddExpr(Expr): # e1 + e2
     def __init__(self, e1, e2):
         self.lhs = e1
         self.rhs = e2
+        self.type = "AddExpr"
 
     def __str__(self):
         return (str(self.lhs) + " + " + str(self.rhs))
@@ -537,6 +566,7 @@ class SubExpr(Expr): # e1 - e2
     def __init__(self, e1, e2):
         self.lhs = e1
         self.rhs = e2
+        self.type = "SubExpr"
 
     def __str__(self):
         return (str(self.lhs) + " - " + str(self.rhs))
@@ -546,6 +576,7 @@ class MultExpr(Expr): # e1 * e2
     def __init__(self, e1, e2):
         self.lhs = e1
         self.rhs = e2
+        self.type = "MultExpr"
 
     def __str__(self):
         return (str(self.lhs) + " * " + str(self.rhs))
@@ -555,6 +586,7 @@ class DivExpr(Expr): # e1 / e2
     def __init__(self, e1, e2):
         self.lhs = e1
         self.rhs = e2
+        self.type = "DivExpr"
 
     def __str__(self):
         return (str(self.lhs) + " / " + str(self.rhs))
@@ -563,7 +595,7 @@ class DivExpr(Expr): # e1 / e2
 
 def math_step_add(e):
     
-    if type(e.lhs) == IntExpr and type(e.lhs) == IntExpr:
+    if e.lhs.type == "IntExpr" and e.rhs.type == "IntExpr":
         return IntExpr(e.lhs.val + e.rhs.val)
 
     if math_is_reducible(e.lhs):
@@ -574,7 +606,7 @@ def math_step_add(e):
 
 def math_step_sub(e):
 
-    if type(e.lhs) == IntExpr and type(e.lhs) == IntExpr:
+    if e.lhs.type == "IntExpr" and e.rhs.type == "IntExpr":
         return IntExpr(e.lhs.val - e.rhs.val)
 
     if math_is_reducible(e.lhs):
@@ -585,7 +617,7 @@ def math_step_sub(e):
 
 def math_step_mult(e):
 
-    if type(e.lhs) == IntExpr and type(e.lhs) == IntExpr:
+    if e.lhs.type == "IntExpr" and e.rhs.type == "IntExpr":
         return IntExpr(e.lhs.val * e.rhs.val)
 
     if math_is_reducible(e.lhs):
@@ -596,7 +628,7 @@ def math_step_mult(e):
 
 def math_step_div(e):
 
-    if type(e.lhs) == IntExpr and type(e.lhs) == IntExpr:
+    if e.lhs.type == "IntExpr" and e.rhs.type == "IntExpr":
         return IntExpr(e.lhs.val / e.rhs.val)
 
     if math_is_reducible(e.lhs):
@@ -623,6 +655,8 @@ def math_solve(e):
 
         if type(e) == DivExpr:
             return math_step_div(e)
+    else:
+    	return e
     
 
 def math_is_reducible(e):
