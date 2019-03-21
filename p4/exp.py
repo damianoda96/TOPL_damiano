@@ -24,7 +24,7 @@ class IntType(Type):
     def __str__(self):
     	return "Int"
 
-class ArrowType(Type):
+'''class ArrowType(Type):
 
 	def __init__(self, t1, t2):
 		self.param = t1
@@ -42,7 +42,7 @@ class FnType(Type):
     	self.ret = ret
 
     def __str__(self):
-    	return "Funtion"
+    	return "Funtion"'''
 
 class Expr:
 
@@ -81,47 +81,18 @@ class Expr:
 
     pass
 
+# Conditional Exprs
 
+class IfExpr(Expr):
 
-# ---- TYPE CHECKING ------
+	def __init__(self, e1, e2, e3):
+		self.conditional = e1
+		self.true = e2
+		self.false = e3
 
-def check_not(e):
-    pass
-
-def check_and(e):
-    pass
-
-def check_or(e):
-    pass
-
-def do_check(e):
-
-    # implement all of this stuff
-
-    assert isinstance(e, Expr)
-
-    if type(e) is BoolExpr:
-        return BoolType()
-
-    if type(e) is IntExpr:
-        return IntType()
-
-    if type(e) is NotExpr:
-        return check_not(e)
-
-    if type(e) is AndExpr:
-        return check_and(e)
-
-    if type(e) is OrExpr:
-        return check_or(e)
-
-def type_check(e):
-
-    if not e.type:
-        e.type = do_check(e)
-
-    return e.type
-
+	def __str__(self):
+		
+		return ("if " + str(self.conditional) + " then " + str(self.true) + " else " + str(self.false))
 
 
 # Bool Stuff ------------------------------------
@@ -590,6 +561,30 @@ class DivExpr(Expr): # e1 / e2
 
     def __str__(self):
         return (str(self.lhs) + " / " + str(self.rhs))
+
+# MATH TODO, Make these work with our step function:
+
+class ModExpr(Expr): # e1 % e2
+
+	def __init__(self, e1, e2):
+		self.lhs = e1
+		self.rhs = e2
+		self.type = "ModExpr"
+
+	def __str__(self):
+		return (str(self.lhs) + " % " + str(self.rhs))
+
+class NegExpr(Expr):
+
+	def __init__(self, e1):
+		self.expr = e1
+
+	def __str__(self):
+		return ("-" + str(expr))
+
+
+
+
 
 # ------- MATH EVALUATION -----
 
