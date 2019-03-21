@@ -24,7 +24,7 @@ class IntType(Type):
     def __str__(self):
     	return "Int"
 
-'''class ArrowType(Type):
+class ArrowType(Type):
 
 	def __init__(self, t1, t2):
 		self.param = t1
@@ -42,7 +42,7 @@ class FnType(Type):
     	self.ret = ret
 
     def __str__(self):
-    	return "Funtion"'''
+    	return "Function"
 
 class Expr:
 
@@ -584,8 +584,6 @@ class NegExpr(Expr):
 
 
 
-
-
 # ------- MATH EVALUATION -----
 
 def math_step_add(e):
@@ -594,10 +592,12 @@ def math_step_add(e):
         return IntExpr(e.lhs.val + e.rhs.val)
 
     if math_is_reducible(e.lhs):
-        return AddExpr(math_step(e.lhs), e.rhs)
+        return AddExpr(math_solve(e.lhs), e.rhs)
 
     if math_is_reducible(e.rhs):
-        return AddExpr(e.lhs, math_step(e.rhs))
+        return AddExpr(e.lhs, math_solve(e.rhs))
+
+    assert False
 
 def math_step_sub(e):
 
@@ -605,10 +605,12 @@ def math_step_sub(e):
         return IntExpr(e.lhs.val - e.rhs.val)
 
     if math_is_reducible(e.lhs):
-        return SubExpr(math_step(e.lhs), e.rhs)
+        return SubExpr(math_solve(e.lhs), e.rhs)
 
     if math_is_reducible(e.rhs):
-        return SubExpr(e.lhs, math_step(e.rhs))
+        return SubExpr(e.lhs, math_solve(e.rhs))
+
+    assert False
 
 def math_step_mult(e):
 
@@ -616,10 +618,12 @@ def math_step_mult(e):
         return IntExpr(e.lhs.val * e.rhs.val)
 
     if math_is_reducible(e.lhs):
-        return MultExpr(math_step(e.lhs), e.rhs)
+        return MultExpr(math_solve(e.lhs), e.rhs)
 
     if math_is_reducible(e.rhs):
-        return MultExpr(e.lhs, math_step(e.rhs))
+        return MultExpr(e.lhs, math_solve(e.rhs))
+
+    assert False
 
 def math_step_div(e):
 
@@ -627,10 +631,33 @@ def math_step_div(e):
         return IntExpr(e.lhs.val / e.rhs.val)
 
     if math_is_reducible(e.lhs):
-        return DivExpr(math_step(e.lhs), e.rhs)
+        return DivExpr(math_solve(e.lhs), e.rhs)
 
     if math_is_reducible(e.rhs):
-        return DivExpr(e.lhs, math_step(e.rhs))
+        return DivExpr(e.lhs, math_solve(e.rhs))
+
+    assert False
+
+def math_step_mod(e):
+
+	if e.lhs.type == "IntExpr" and e.rhs.type == "IntExpr":
+        return IntExpr(e.lhs.val % e.rhs.val)
+
+    if math_is_reducible(e.lhs):
+        return ModExpr(math_solve(e.lhs), e.rhs)
+
+    if math_is_reducible(e.rhs):
+        return ModExpr(e.lhs, math_solve(e.rhs))
+
+    assert False
+
+def math_step_neg(e):
+
+	if e.type == "IntExpr":
+		return (IntExpr(e.val *= -1))
+
+	if math_is_reducible(e):
+		return NegExpr(math_solve(e))
 
 def math_solve(e):
     
@@ -650,6 +677,15 @@ def math_solve(e):
 
         if type(e) == DivExpr:
             return math_step_div(e)
+
+        if type(e) == ModExpr:
+        	return math_step_mod(e)
+
+        if type(e) == NegExpr:
+        	return math_step_neg(e)
+
+        raise Exception("Type of math exp is invalid")
+
     else:
     	return e
     
