@@ -28,16 +28,17 @@ def check_bool(e):
 	return BoolType
 
 def check_not(e):
-    pass
+    if(is_bool(e.val)):
+    	return BoolType
 
 def check_and(e):
-    if(is_bool(e.lhs) and is_bool(e.rhs))
+    if(is_bool(e.lhs) and is_bool(e.rhs)):
     	return BoolType
 
     assert(False)
 
 def check_or(e):
-    if(is_bool(e.lhs) and is_bool(e.rhs))
+    if(is_bool(e.lhs) and is_bool(e.rhs)):
     	return BoolType
 
 def check_int(e):
@@ -46,7 +47,13 @@ def check_int(e):
 def check_if(e):
 	pass
 
-def check_add(e):
+def check_math_op(e):
+	if(is_int(e.lhs) and is_int(e.rhs)):
+		return IntType
+
+	assert False
+
+'''def check_add(e):
 	if(is_int(e.lhs) and is_int(e.rhs)):
 		return IntType
 
@@ -76,10 +83,12 @@ def check_mod(e):
 
 	assert False
 
+'''
+
 def check_neg(e):
 	pass
 
-def check_eq(e):
+'''def check_eq(e):
 	if(has_same_type(e.lhs, e.rhs)):
 		return BoolType
 
@@ -100,6 +109,10 @@ def check_gr_than_or_eq(e):
 		return BoolType
 
 def check_le_than_or_eq(e):
+	if(has_same_type(e.lhs, e.rhs)):
+		return BoolType'''
+
+def check_boolean_op(e):
 	if(has_same_type(e.lhs, e.rhs)):
 		return BoolType
 
@@ -123,8 +136,6 @@ def check_app(e):
 
 def do_check(e):
 
-    # implement all of this stuff
-
     assert isinstance(e, Expr)
 
     if type(e) is BoolExpr:
@@ -145,7 +156,11 @@ def do_check(e):
     if type(e) is IfExpr:
         return check_if(e)
 
-    if type(e) is AddExpr:
+    if type(e) is AddExpr or type(e) is SubExpr or type(e) is MultExpr
+    or type(e) is DivExpr or type(e) is ModExpr:
+    	return check_math_op(e)
+
+    '''if type(e) is AddExpr:
         return check_add(e)
 
     if type(e) is SubExpr:
@@ -158,12 +173,16 @@ def do_check(e):
        	return check_div(e)
 
     if type(e) is ModExpr:
-        return check_mod(e)
+        return check_mod(e)'''
 
     if type(e) is NegExpr:
         return check_neg(e)
 
-    if type(e) is EqualToExpr:
+    if type(e) is EqualToExpr or type(e) is NotEqualToExpr or type(e) is GrThanExpr
+    or type(e) is GrThanOrEqExpr or type(e) is LethanExpr or type(e) is LeThanOrEqExpr:
+    	return check_boolean_op(e)
+
+    '''if type(e) is EqualToExpr:
         return check_eq(e)
 
     if type(e) is NotEqualToExpr:
@@ -179,7 +198,7 @@ def do_check(e):
         return check_gr_or_eq(e)
 
     if type(e) is LeThanOrEqExpr:
-       	return check_le_or_eq(e)
+       	return check_le_or_eq(e)'''
 
     if type(e) is IdExpr:
         return check_id(e)

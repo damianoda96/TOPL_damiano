@@ -1,5 +1,6 @@
 import sys
 from exp import *
+from checking import *
 import gen
 
 # Langauge Testing
