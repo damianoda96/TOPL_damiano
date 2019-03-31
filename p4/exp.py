@@ -628,7 +628,7 @@ def math_step_mult(e):
 def math_step_div(e):
 
     if e.lhs.type == "IntExpr" and e.rhs.type == "IntExpr":
-        return IntExpr(e.lhs.val / e.rhs.val)
+        return IntExpr(int(e.lhs.val / e.rhs.val))
 
     if math_is_reducible(e.lhs):
         return DivExpr(math_solve(e.lhs), e.rhs)
@@ -640,7 +640,7 @@ def math_step_div(e):
 
 def math_step_mod(e):
 
-	if e.lhs.type == "IntExpr" and e.rhs.type == "IntExpr":
+    if e.lhs.type == "IntExpr" and e.rhs.type == "IntExpr":
         return IntExpr(e.lhs.val % e.rhs.val)
 
     if math_is_reducible(e.lhs):
@@ -654,7 +654,7 @@ def math_step_mod(e):
 def math_step_neg(e):
 
 	if e.type == "IntExpr":
-		return (IntExpr(e.val *= -1))
+		return (IntExpr(e.val * -1))
 
 	if math_is_reducible(e):
 		return NegExpr(math_solve(e))

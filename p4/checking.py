@@ -156,8 +156,8 @@ def do_check(e):
     if type(e) is IfExpr:
         return check_if(e)
 
-    if type(e) is AddExpr or type(e) is SubExpr or type(e) is MultExpr
-    or type(e) is DivExpr or type(e) is ModExpr:
+    if (type(e) is AddExpr or type(e) is SubExpr or type(e) is MultExpr
+    or type(e) is DivExpr or type(e) is ModExpr):
     	return check_math_op(e)
 
     '''if type(e) is AddExpr:
@@ -178,8 +178,8 @@ def do_check(e):
     if type(e) is NegExpr:
         return check_neg(e)
 
-    if type(e) is EqualToExpr or type(e) is NotEqualToExpr or type(e) is GrThanExpr
-    or type(e) is GrThanOrEqExpr or type(e) is LethanExpr or type(e) is LeThanOrEqExpr:
+    if (type(e) is EqualToExpr or type(e) is NotEqualToExpr or type(e) is GrThanExpr
+    or type(e) is GrThanOrEqExpr or type(e) is LethanExpr or type(e) is LeThanOrEqExpr):
     	return check_boolean_op(e)
 
     '''if type(e) is EqualToExpr:

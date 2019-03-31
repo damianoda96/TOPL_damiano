@@ -21,16 +21,20 @@ import gen
 
 # print(var)
 
-#sum0 = math_step(AddExpr(IntExpr(1), IntExpr(1)))
+#sum0 = math_solve(AddExpr(IntExpr(1), IntExpr(1)))
 
 a = IntExpr(1)
 b = IntExpr(1)
 c = IntExpr(2)
-x = EvalEqualityExpr(EqualToExpr(a,b))
-y = EvalEqualityExpr(EqualToExpr(b,c))
+d = EvalEqualityExpr(EqualToExpr(a,b))
+e = EvalEqualityExpr(EqualToExpr(b,c))
+f = math_solve(AddExpr(IntExpr(1), IntExpr(1)))
 
-print(x)
-print(y)
+g = GrThanExpr(a,c)
+
+print(EvalMathComparison(g))
+
+
 
 
 
