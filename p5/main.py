@@ -32,7 +32,11 @@ f = math_solve(AddExpr(IntExpr(1), IntExpr(1)))
 
 g = GrThanExpr(a,c)
 
-print(EvalMathComparison(g))
+t = TupleExpr([a, b, c])
+
+# print(EvalMathComparison(g))
+
+
 
 
 

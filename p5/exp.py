@@ -79,8 +79,6 @@ class Expr:
     def __str__(self):
         return self.Expr
 
-    pass
-
 # Tuples
 
 class TupleExpr(Expr):
@@ -88,18 +86,39 @@ class TupleExpr(Expr):
 		self.items = items
 		self.size = len(items)
 
+	def append(self, item):
+		self.items.append(item)
+		self.size += 1
+
+	def assign(self, index, val):
+		self.items[i] = val
+
 	def __str__(self):
-		return (self.items)
+		return str(self.items)
 
 # Records
 
 class RecordExpr(Expr):
-	pass
+	def __init__(self, keys, vals):
+		self.keys = keys
+		self.vals = vals
+
+	def append(self, key, val):
+		self.keys.append(key)
+		self.val.append(val)
+
+	def __str__(self):
+		return (str(self.keys) + " " + str(self.vals))
 
 # Variants
 
 class VariantExpr(Expr):
-	pass
+	def __init__(self, types, items):
+		self.types = types
+		self.items = items
+
+	def __str__(self):
+		return (str(self.types) + " " + str(self.items))
 
 # Conditional Exprs
 
