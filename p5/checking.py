@@ -134,6 +134,15 @@ def check_app(e):
 
 	return t1
 
+def check_tuple(e):
+	pass
+
+def check_record(e):
+	pass
+
+def check_variant(e):
+	pass
+
 def do_check(e):
 
     assert isinstance(e, Expr)
@@ -204,10 +213,21 @@ def do_check(e):
         return check_id(e)
 
     if type(e) is AbsExpr:
-        return abs_expr(e)
+        return check_abs(e)
 
     if type(e) is AppExpr:
        	return check_app(e)
+
+    if type(e) is TupleExpr:
+    	return check_tuple(e)
+
+    if type(e) is RecordExpr:
+    	return check_record(e)
+
+    if type(e) is VariantExpr:
+    	return check_variant(e)
+
+    assert(False)
 
 def type_check(e):
 
