@@ -44,6 +44,16 @@ class FnType(Type):
     def __str__(self):
     	return "Function"
 
+class TupleType(Type):
+
+	# Tuple Type
+
+	def __init__(self, types):
+		self.elememts = list(map, get_type, types)
+
+	def __str__(self):
+		return str(elememts)
+
 class Expr:
 
     # --- Boolean stuff --
@@ -922,5 +932,15 @@ def step_lam(e):
   		step_app(e)
 
   	assert False
+
+# ------ TYPES ------
+
+def get_type(x):
+	if x is bool:
+		return BoolType()
+	elif x is int:
+		return IntType()
+	else:
+		return x
 
 
