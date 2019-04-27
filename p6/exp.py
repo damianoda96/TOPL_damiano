@@ -52,7 +52,28 @@ class TupleType(Type):
 		self.elememts = list(map, get_type, types)
 
 	def __str__(self):
-		return str(elememts)
+		return str(self.elememts)
+
+class RecordType(Type):
+
+	# Record Type
+
+	def __init__(self, fields):
+		self.fields = list(map, get_field, fields)
+
+	def __str__(self):
+		return str(self.fields)
+
+class VariantType(Type):
+
+	# Record Type
+
+	def __init__(self, fields):
+		self.fields = list(map, get_field, fields)
+
+	def __str__(self):
+		return str(self.fields)
+
 
 class Expr:
 
@@ -129,6 +150,24 @@ class VariantExpr(Expr):
 
 	def __str__(self):
 		return (str(self.types) + " " + str(self.items))
+
+# Declarations _____
+
+class VarDecl:
+	def __init__(self, id, t):
+		self.id = id
+		self.type = get_type(t)
+
+	def __str__(self):
+		return (str(self.id) + ":" + str(self.type))
+
+class FieldDecl:
+	def __init__(self, id, t):
+		self.id = id
+		self.type = get_type(t)
+
+	def __str__(self):
+		return (str(self.id) + ":" + str(self.type))
 
 # Conditional Exprs
 
@@ -942,5 +981,10 @@ def get_type(x):
 		return IntType()
 	else:
 		return x
+
+def get_field(x):
+	if type(x) is tuple:
+		return FieldDecl(x[0], x[1])
+	return x
 
 
