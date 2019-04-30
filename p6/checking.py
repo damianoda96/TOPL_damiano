@@ -24,37 +24,40 @@ def is_same_type(t1 : Type, t2 : Type):
 # ---- Universally Quanitified Types -----
 
 def is_tuple(t : Type):
-    return type(t) is TupleExpr
+    return type(t) is TupleType
 
 def is_record(t : Type):
-    return type(t) is RecordExpr
+    return type(t) is RecordType
 
 def is_variant(t : Type):
-    return type(t) is VariantExpr
+    return type(t) is VariantType
+
+def is_universal(t: Type):
+    return type(t) is UniQuaType
 
 # ---------
 
 def expr_same_type(e1, e2):
 	return is_same_type(type_check(e1), type_check(e2))
 
-def check_bool(e):
+def check_bool(e: Expr):
 	return BoolType
 
-def check_not(e):
+def check_not(e: Expr):
     if(is_bool(e.val)):
     	return BoolType
 
-def check_and(e):
+def check_and(e: Expr):
     if(is_bool(e.lhs) and is_bool(e.rhs)):
     	return BoolType
 
     assert(False)
 
-def check_or(e):
+def check_or(e : Expr):
     if(is_bool(e.lhs) and is_bool(e.rhs)):
     	return BoolType
 
-def check_int(e):
+def check_int(e: Expr):
 	return IntType
 
 def check_if(e : Expr):
@@ -150,6 +153,9 @@ def do_check(e : Expr):
 
     if type(e) is VariantExpr:
     	return check_variant(e)
+
+    if type(e) is UniQuaExpr:
+        return check_universal(e)
 
     assert(False)
 

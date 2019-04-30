@@ -74,6 +74,23 @@ class VariantType(Type):
 	def __str__(self):
 		return str(self.fields)
 
+class UniQuaType(Type):
+
+    # Universally Quantified Type
+
+    def __init__(self, type_list, type):
+        Type.__init__(self)
+        self.params = list(map(type_declaration, type_list))
+        self.type = get_type(type)
+
+    def __str__(self):
+        return ("∀[" + str(type_list) + "]." + str(self.type))
+
+
+
+
+
+# ____ EXPRESSIONS __________
 
 class Expr:
 
@@ -151,6 +168,16 @@ class VariantExpr(Expr):
 	def __str__(self):
 		return (str(self.types) + " " + str(self.items))
 
+# Universally Quantified Expressions
+
+class UniQuaExpr(Expr):
+    def __init__(self, types, items):
+        self.types = types
+        self.items = items
+
+    def __str__(self):
+        return (str(self.types) + " " + str(self.items))
+
 # Declarations _____
 
 class VarDecl:
@@ -168,6 +195,14 @@ class FieldDecl:
 
 	def __str__(self):
 		return (str(self.id) + ":" + str(self.type))
+
+class TypeDecl:
+    # Type Declaration
+    def __init__(self, id):
+        self.id = id
+
+    def __str__(self):
+        return str(self.id)
 
 # Conditional Exprs
 
@@ -974,17 +1009,27 @@ def step_lam(e):
 
 # ------ TYPES ------
 
-def get_type(x):
-	if x is bool:
+def get_type(obj):
+	if obj is bool:
 		return BoolType()
-	elif x is int:
+	elif obj is int:
 		return IntType()
 	else:
-		return x
+		return obj
 
-def get_field(x):
-	if type(x) is tuple:
-		return FieldDecl(x[0], x[1])
-	return x
+def get_field(obj):
+    if type(obj) is tuple:
+        return FieldDecl(obj[0], obj[1])
+    else:
+        return obj
+
+def type_declaration(obj):
+
+    # converts input object into a type_declaration
+
+    if type(obj) is str:
+        return TypeDecl(obj)
+    else:
+        return obj
 
 
