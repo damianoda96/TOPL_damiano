@@ -16,13 +16,19 @@ class Type:
 
 class BoolType(Type):
 
-    def __str__(self):
-    	return "Bool"
+	def __init__(self):
+		pass
+
+	def __str__(self):
+ 		return "Bool"
 
 class IntType(Type):
 
-    def __str__(self):
-    	return "Int"
+	def __init__(self):
+		pass
+
+	def __str__(self):
+		return "Int"
 
 class ArrowType(Type):
 
@@ -80,14 +86,11 @@ class UniQuaType(Type):
 
     def __init__(self, type_list, type):
         Type.__init__(self)
-        self.params = list(map(type_declaration, type_list))
+        self.type_list = list(map(type_declaration, type_list))
         self.type = get_type(type)
 
     def __str__(self):
-        return ("∀[" + str(type_list) + "]." + str(self.type))
-
-
-
+        return ("∀[" + str(self.type_list) + "]." + str(self.type))
 
 
 # ____ EXPRESSIONS __________

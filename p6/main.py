@@ -32,7 +32,16 @@ f = math_solve(AddExpr(IntExpr(1), IntExpr(1)))
 
 g = GrThanExpr(a,c)
 
-t = TupleExpr([a, b, c])
+#t = TupleExpr([a, b, c]
+
+int_type = IntType()
+bool_type = BoolType()
+
+types = [int_type, bool_type]
+
+uni = UniQuaType(types, TupleType)
+
+print(uni)
 
 # print(EvalMathComparison(g))
 
